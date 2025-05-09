@@ -1,0 +1,4 @@
+Установить библиотеку wikipedia
+pip install wikipedia-api
+
+python manage.py migrate

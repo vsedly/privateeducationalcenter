@@ -1,0 +1,105 @@
+﻿{% extends 'dashboard/base.html' %} 
+{% load static %} 
+{% block content %}
+
+<section class="container text-center">
+  <h3>Добро пожаловать!</h3>
+
+  <hr> <br>
+  <div class="row justify-content-center">
+    <div class="col-md-3">
+      <a href="{% url 'notes' %}">
+        <div class="card">
+          <img class="card-img-top" src="{% static 'images/notes.jpg' %}" alt="Notes image">
+          <div class="card-body">
+              <h5 class="card-title ">
+                  Заметки
+              </h5>
+              Создайте заметки. Они хранятся постоянно, пока не будут удалены
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="col-md-3">
+      <a href="{% url 'homework' %}">
+        <div class="card">
+          <img class="card-img-top" src="{% static 'images/homework.jpg' %}" alt="Notes image">
+          <div class="card-body">
+              <h5 class="card-title ">
+                  Домашнее задание
+              </h5>
+              Добавьте домашние задания и назначьте им сроки выполнения. Они будут отображаться в порядке приоритетности по срокам
+          </div>
+        </div>
+      </a>
+    </div>
+
+ 
+
+    <div class="col-md-3">
+      <a href="{% url 'todo' %}">
+        <div class="card">
+          <img class="card-img-top" src="{% static 'images/zamet.jpg' %}" alt="Notes image">
+          <div class="card-body">
+              <h5 class="card-title ">
+                  Дела
+              </h5>
+              Добавляйте списки дел на день и удаляйте их по мере завершения.
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+  <br><br><br>
+  <div class="row justify-content-center">
+    <div class="col-md-3 ">
+      <a href="{% url 'books' %}">
+        <div class="card mt-20">
+          <img class="card-img-top" src="{% static 'images/biblioteka.jpg' %}" alt="Notes image">
+          <div class="card-body">
+              <h5 class="card-title ">
+                  Библиотека
+              </h5>
+              Просматривайте книги из списка аккуратно организованного меню книг
+          </div>
+        </div>
+      </a>
+    </div>
+
+
+
+    <div class="col-md-3">
+      <a href="{% url 'dictionary' %}">
+        <div class="card">
+          <img class="card-img-top" src="{% static 'images/dictionary.jpg' %}" alt="Notes image">
+          <div class="card-body">
+              <h5 class="card-title ">
+                  Словарь
+              </h5>
+              Словарный запас из книги не дает вам покоя? Нет проблем, введите слово, и значение будет показано
+              практически мгновенно
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <a href="{% url 'wikipedia' %}">
+        <div class="card">
+          <img class="card-img-top" src="{% static 'images/wiki.jpg' %}" alt="Notes image">
+          <div class="card-body">
+              <h5 class="card-title ">
+                  WikiPedia
+              </h5>
+              Домашняя работа и задания? Поиск в Википедии для получения быстрых результатов
+          </div>
+        </div>
+      </a>
+    </div>
+
+
+
+
+
+</section>
+{% endblock content %}

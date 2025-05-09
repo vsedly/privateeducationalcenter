@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\dashboard",
+    "\\dashboard\\migrations",
+    "\\dashboard\\templates",
+    "\\dashboard\\templates\\dashboard",
+    "\\static\\css",
+    "\\studentstudyportal",
+    "\\venv\\Lib",
+    "\\venv\\Lib\\site-packages",
+    "\\venv\\Lib\\site-packages\\pip"
+  ],
+  "SelectedNode": "\\venv",
+  "PreviewInSolutionExplorer": false
+}
