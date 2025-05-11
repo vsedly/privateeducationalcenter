@@ -1,0 +1,32 @@
+{% extends 'dashboard/base.html' %}
+
+{% block content %}
+<h2>Твое расписание!</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Subject</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for schedule in schedules %}
+        <tr>
+            <td>{{ schedule.subject }}</td>
+            <td>{{ schedule.date }}</td>
+            <td>{{ schedule.start_time }}</td>
+            <td>{{ schedule.end_time }}</td>
+            <td>{{ schedule.description }}</td>
+            <td>
+                <a href="{% url 'edit_schedule' schedule.id %}" class="btn btn-warning btn-sm">Edit</a>
+                <a href="{% url 'delete_schedule' schedule.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

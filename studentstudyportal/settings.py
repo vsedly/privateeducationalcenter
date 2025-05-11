@@ -17,19 +17,15 @@ import os
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-09i$v+h-qxk7jlj8i!g2!g7@*o(%xk+v8@h!v%0490r_jou4&a'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -96,19 +92,7 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',  # MySQL backend
-#         'NAME': 'rides',          # Database name
-#         'USER': 'root',               # MySQL username
-#         'PASSWORD': 'root',           # MySQL password
-#         'HOST': 'localhost',                   # Database host (e.g., localhost or remote IP)
-#         'PORT': '3306',                        # Default MySQL port
-#         'OPTIONS': {
-#             'charset': 'utf8mb4',              # Use utf8mb4 for better character support
-#         },
-#     }
-# }
+
 
 
 

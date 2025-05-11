@@ -1,13 +1,15 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from django.contrib import messages
 from django.views import generic
-from youtubesearchpython import *
 import requests
 import wikipedia
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from .forms import StudentScheduleForm
+from .models import StudentSchedule
+
 
 
 # Create your views here.
@@ -18,19 +20,18 @@ def home(request):
 #for creating notes and updating tables
 @login_required
 def notes(request):
-    if request.method=='POST':
-        form=Notesform(request.POST)
+    if request.method == 'POST':
+        form = Notesform(request.POST)
         if form.is_valid():
-            notes=Notes(user=request.user,title=request.POST['title'],description=request.POST['description'])
+            notes = Notes(user=request.user, title=request.POST['title'], description=request.POST['description'])
             notes.save()
-            
-            messages.success(request,f'Notes added from {request.user.username} successfully')
+            # Заменяем username на email
+            messages.success(request, f'Notes added from {request.user.email} successfully')
     else:
-        form=Notesform()
-    notes=Notes.objects.filter(user=request.user)
-    context={'notes':notes,'form':form}
-    return render(request,'dashboard/notes.html',context)
-
+        form = Notesform()
+    notes = Notes.objects.filter(user=request.user)
+    context = {'notes': notes, 'form': form}
+    return render(request, 'dashboard/notes.html', context)
 #delete notes
 @login_required
 def delete_note(request,pk=None):
@@ -44,30 +45,36 @@ class NotesDetailview(generic.DetailView):
 #creating the homework form and add to the tables
 @login_required
 def homework(request):
-    if request.method=='POST':
-        form=Homeworkform(request.POST)
+    if request.method == 'POST':
+        form = Homeworkform(request.POST)
         if form.is_valid():
             try:
-                finished=request.POST['is_finished']
-                if finished=='on':
-                    finished=True
+                finished = request.POST['is_finished']
+                if finished == 'on':
+                    finished = True
                 else:
-                    finished=False
+                    finished = False
             except:
-                finished=False
-            homework=Homework(user=request.user,subject=request.POST['subject'],title=request.POST['title'],description=request.POST['description'],due=request.POST['due'],is_finished=finished)
+                finished = False
+            homework = Homework(
+                user=request.user,
+                subject=request.POST['subject'],
+                title=request.POST['title'],
+                description=request.POST['description'],
+                due=request.POST['due'],
+                is_finished=finished
+            )
             homework.save()
-            messages.success(request,f'data added from {request.user.username} successfully!!')
+            # Заменяем username на email
+            messages.success(request, f'Data added from {request.user.email} successfully!!')
     else:
-        form=Homeworkform()
+        form = Homeworkform()
 
-    homework=Homework.objects.filter(user=request.user)
-    if len(homework)==0:
-        homework_done=True
-    else:
-        homework_done=False
-    context={'homeworks':homework,'homework_done':homework_done,'form':form}
-    return render(request,'dashboard/homework.html',context)
+    homework = Homework.objects.filter(user=request.user)
+    homework_done = len(homework) == 0
+    context = {'homeworks': homework, 'homework_done': homework_done, 'form': form}
+    return render(request, 'dashboard/homework.html', context)
+
  
 #for updating the status like clicking the checkbox
 @login_required
@@ -85,72 +92,36 @@ def delete_homework(request,pk):
     Homework.objects.get(id=pk).delete()
     return redirect('homework')
 
-@login_required
-def youtube(request):
-    if request.method=='POST':
-        form=Dashboardform(request.POST)
-        text=request.POST['text']   # is retrive the values of the text field form POST request data
-        video=Search(text,limit=5)  # for search related videos in youtube and taking the input field as text and here we have to set limt also 
-        result_list=[]
-        for i in video.result()['result']:     # for iterate the result and storing the result in i
-            result_dict={                      # storing the data in dictionary format
-                'input':text,
-                'title':i['title'],
-                'duration':i['duration'],
-                'thumbnail': i['thumbnails'][0]['url'],
-                'channel':i['channel']['name'],
-                'link':i['link'],
-                'views':i['viewCount']['short'],
-                'published':i['publishedTime']
-            }
-            desc=''                               # taken empty string  for adding description in string format
-            if i['descriptionSnippet']:             # if description is there we can use if condition
-                for j in i['descriptionSnippet']:   # if more than 2 description is there we can iterate the loop 
-                    desc+=j['text']                # j['text'] is accessing the value from text and add to desc  
-            result_dict['description']=desc         # desc description is store to the result_dict
-            result_list.append(result_dict)         # and finally appended the  dictionary result in empty list
-            context={
-                'form':form,
-                'results':result_list
-            }
-        return render(request,'dashboard/youtube.html',context)
-     
-    else:                                        #  '''in this case the form is not a post method this else block 
-        form=Dashboardform()                         #    wiil be execucated and display the form object '''
-    context={'form':form}
-    return render(request,'dashboard/youtube.html',context)
-
 
 # creating todo function
 @login_required
 def todo(request):
-    if request.method=='POST':
-        form=Todoform(request.POST)  # for  creating todoform 
+    if request.method == 'POST':
+        form = Todoform(request.POST)
         if form.is_valid():
-            try:                  # for checking existing value is finished or not
-                finished=request.POST['is_finished']   # get is_finished from models 
-                if finished =='on':   
-                    finished=True
+            try:
+                finished = request.POST['is_finished']
+                if finished == 'on':
+                    finished = True
                 else:
-                    finished=False
+                    finished = False
             except:
-                finished=False     #if try block any catches exeption  this block is execute
-                    
-            todo=Todo(user=request.user,title=request.POST['title'],is_finished=finished) 
-            todo.save() # for creating new instance of django model
-            messages.success(request,f'task added from {request.user.username} successfully!!')
+                finished = False
+            todo = Todo(
+                user=request.user,
+                title=request.POST['title'],
+                is_finished=finished
+            )
+            todo.save()
+            # Заменяем username на email
+            messages.success(request, f'Task added from {request.user.email} successfully!!')
     else:
-            form=Todoform()            
-    todo=Todo.objects.filter(user=request.user)  # this is for logged-in user for authentication
-    
-    # for checking length of collections(todo) if tables contains any data the false will execute
-    if len(todo)==0:            
-        todos_done=True
-    else:
-        todos_done=False
-    context={'todos':todo,'form':form,'todos_done':todos_done} 
-           
-    return render(request,'dashboard/todo.html',context)
+        form = Todoform()
+
+    todo = Todo.objects.filter(user=request.user)
+    todos_done = len(todo) == 0
+    context = {'todos': todo, 'form': form, 'todos_done': todos_done}
+    return render(request, 'dashboard/todo.html', context)
 
 #update todo
 @login_required
@@ -266,72 +237,6 @@ def wiki(request):
         context={'form':form}
     return render(request,'dashboard/wiki.html',context)
 
-@login_required
-def conversion(request):
-    if request.method=='POST':
-        form=Conversionform()
-        # here if measurement is length then we have to take that lengthform
-        if request.POST['measurement']=='length': 
-            measurement_form=Conversionlengthform()
-            context={
-                'form':form,
-                'm_form':measurement_form,
-                'input':True    
-            }
-            # here if input is there in post method  then it wiil take  measure1 and 2 for conversion
-            if 'input' in request.POST:
-                first=request.POST['measure1']
-                second=request.POST['measure2']
-                input=request.POST['input']
-                answer=''
-                # if input is not null
-                if input and int(input)>0:
-                    if first=='yard' and second=='foot':
-                        answer=f'{input} yard={int(input)*3} foot' # converting yard to foot
-                    if first=='foot' and second=='yard':
-                        answer=f'{input} foot={int(input)/3} yard' #converting foot to yard
-                        
-                context={
-                    'form':form,
-                    'm_form':measurement_form,
-                    'input':True,
-                    'answer':answer
-                }
-                
-     # here if measurement is mass then we have to take that lengthform
-        if request.POST['measurement']=='mass': 
-            measurement_form=Conversionmassform()
-            context={
-                'form':form,
-                'm_form':measurement_form,
-                'input':True    
-            }
-            # here if input is there in post method  then it wiil take  measure1 and 2 for conversion
-            if 'input' in request.POST:
-                first=request.POST['measure1']
-                second=request.POST['measure2']
-                input=request.POST['input']
-                answer=''
-                # if input is not null
-                if input and int(input)>0:
-                    if first=='pound' and second=='kilogram':
-                        answer=f'{input} pound={int(input)*0.453592} kilograsm' # converting pound to kg
-                    if first=='kilogram' and second=='pound':
-                        answer=f'{input} kilogram={int(input)*2.2062} pound' #converting kg to pound
-                        
-                context={
-                    'form':form,
-                    'm_form':measurement_form,
-                    'input':True,
-                    'answer':answer
-                } 
-                        
-                
-    else:
-                
-        form=Conversionform()
-        context={'form':form}
-    return render(request,'dashboard/conversion.html',context)
 
  
 def user_rigister(request):
@@ -375,4 +280,49 @@ def profile(request):
 def log_out(request):
     logout(request)
     return render(request,'dashboard/logout.html')
- 
+
+#AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+def add_schedule(request):
+    if request.method == 'POST':
+        form = StudentScheduleForm(request.POST)
+        if form.is_valid():
+            schedule = form.save(commit=False)
+            schedule.user = request.user
+            schedule.save()
+            messages.success(request, "Schedule added successfully!")
+            return redirect('view_schedule')
+    else:
+        form = StudentScheduleForm()
+    return render(request, 'dashboard/add_schedule.html', {'form': form})
+
+# Просмотр расписания
+def view_schedule(request):
+    schedules = StudentSchedule.objects.filter(user=request.user)
+    return render(request, 'dashboard/view_schedule.html', {'schedules': schedules})
+
+# Редактирование расписания
+def edit_schedule(request, id):
+    schedule = get_object_or_404(StudentSchedule, id=id, user=request.user)
+    if request.method == 'POST':
+        form = StudentScheduleForm(request.POST, instance=schedule)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Schedule updated successfully!")
+            return redirect('view_schedule')
+    else:
+        form = StudentScheduleForm(instance=schedule)
+    return render(request, 'dashboard/edit_schedule.html', {'form': form})
+
+# Удаление расписания
+def delete_schedule(request, id):
+    schedule = get_object_or_404(StudentSchedule, id=id, user=request.user)
+    schedule.delete()
+    messages.success(request, "Schedule deleted successfully!")
+    return redirect('view_schedule')
+
+def home(request):
+    schedules = StudentSchedule.objects.filter(user=request.user)  # Фильтрация по объекту пользователя
+    context = {'schedules': schedules}
+    return render(request, 'dashboard/home.html', context)
+
+ #AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

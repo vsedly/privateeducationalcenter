@@ -13,8 +13,6 @@ urlpatterns = [
     path('update_homework/<int:pk>/',views.update_homework,name='update_homework'),
     path('delete_homework/<int:pk>/',views.delete_homework,name='delete_homework'),
     
-    path('youtube/',views.youtube,name='youtube'),
-    
     path('todo/',views.todo,name='todo'),
     path('updatetodo/<int:pk>/',views.updatetodo,name='todo_update'),
     path('deletetodo/<int:pk>/',views.tododelete,name='delete_todo'),
@@ -25,9 +23,17 @@ urlpatterns = [
     
     path('wikipedia/',views.wiki,name='wikipedia'),
     
-    path('conversion/',views.conversion,name='conversion'),
-    
     path('logout/',views.log_out,name='logout'),
+
+    path('add-schedule/', views.add_schedule, name='add_schedule'),
+
+    path('view-schedule/', views.view_schedule, name='view_schedule'),
+
+    path('edit-schedule/<int:id>/', views.edit_schedule, name='edit_schedule'),
+
+    path('delete-schedule/<int:id>/', views.delete_schedule, name='delete_schedule'),
+
+    path('', views.home, name='home'),
      
     
 ]

@@ -24,32 +24,16 @@ class Todoform(forms.ModelForm):
         model=Todo
         fields=['title','is_finished']
         
-class Conversionform(forms.Form):
-    CHOICES=[('length','Length'),('mass','Mass')]
-    measurement=forms.ChoiceField(choices=CHOICES,widget=forms.RadioSelect)
-        
-class Conversionlengthform(forms.Form):
-    CHOICES=[('yard','Yard'),('foot','Foot')]
-    input=forms.CharField(required=False,label=False,widget=forms.TextInput(
-        attrs={'type':'number','placeholder':'Enter the Number'}
-    ))
-    
-    measure1=forms.CharField(label='', widget=forms.Select(choices=CHOICES))
-    
-    measure2=forms.CharField(label='',widget=forms.Select(choices=CHOICES))
-    
-    
-class Conversionmassform(forms.Form):
-    CHOICES=[('pound','Pound'),('kilogram','Kilogram')]
-    input=forms.CharField(label=False,required=False,widget=forms.TextInput(
-        attrs={'type':'number','placeholder':'Enter the Number'}
-    ))
-    
-    measure1=forms.CharField(label='',widget=forms.Select(choices=CHOICES))
-    
-    measure2=forms.CharField(label='',widget=forms.Select(choices=CHOICES))
 
 class Userrigisterform(UserCreationForm):
     class Meta:
         model=CustomUser
         fields=['fullname','email']
+
+        from django import forms
+from .models import StudentSchedule
+
+class StudentScheduleForm(forms.ModelForm):
+    class Meta:
+        model = StudentSchedule
+        fields = ['subject', 'start_time', 'end_time', 'date', 'description']
