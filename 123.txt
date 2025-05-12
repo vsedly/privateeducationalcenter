@@ -1,5 +1,5 @@
 0. cd /project
-1. python -m venv venv
+1. python -m venv venv        |or|  py -3.7 -m venv venv                  
 2 .\venv\Scripts\activate
 3. pip install -r chitai.txt 
 4. python manage.py migrate
@@ -9,4 +9,11 @@ http://127.0.0.1:8000/login
 
 
 
-venv\Scripts\activate bez toch
+venv\Scripts\activate bez toch cmd
+
+(venv) PS C:\Users\EGLAD228\Desktop\private_center> py --version
+Python 3.7.6
+
+py -3.7 -m venv venv 
+
+eto lyche
